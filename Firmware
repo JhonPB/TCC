@@ -1,0 +1,83 @@
+#include <WiFi.h>
+#define LED 2
+
+const char* ssid     = "joaoESP32";
+const char* password = "pato33123";
+
+WiFiServer wifiServer(80);
+
+IPAddress local_IP(192,168,0,2);
+IPAddress gateway(192,168,0,1);
+IPAddress subnet(255,255,0,0);
+
+
+ //Variables****
+
+     int pass1 = 0; int pass9 = 0;
+     int pass2 = 0; int pass10 = 0;
+     int pass3 = 0; int pass11 = 0;
+     int pass4 = 0; int pass12 = 0;
+     int pass5 = 0; int value = 0;
+     int pass6 = 0;
+     int pass7 = 0;
+     int pass8 = 0;
+
+     int Part1 []={0,0,0,0,0,0,0,0};
+     int Part2 []={0,0,0,0,0,0,0,0};
+     int Part3 []={0,0,0,0,0,0,0,0};
+     int Part4 []={0,0,0,0,0,0,0,0};
+     int Part5 []={0,0,0,0,0,0,0,0};
+     int Part6 []={0,0,0,0,0,0,0,0};
+     int Part7 []={0,0,0,0,0,0,0,0};
+     int Part8 []={0,0,0,0,0,0,0,0};
+     int Part9 []={0,0,0,0,0,0,0,0};
+     int Part10 []={0,0,0,0,0,0,0,0};
+     int Part11 []={0,0,0,0,0,0,0,0};
+     int Part12 []={0,0,0,0,0,0,0,0};
+
+     int valfinal = 0;
+ 
+
+void setup() {
+ 
+    Serial.begin(115200);
+    pin_modes();
+
+    if(!WiFi.softAP(ssid,password)){
+      Serial.println("failed....");
+    }
+
+    delay(100);
+    WiFi.softAPConfig(local_IP,local_IP,subnet);
+    delay(100);
+    
+    Serial.println("IP address: ");
+    Serial.println(WiFi.softAPIP());
+
+    delay(2000);
+    digitalWrite(LED,HIGH);
+    
+    wifiServer.begin();
+}
+
+void loop() {
+
+  WiFiClient client = wifiServer.available();
+
+  if(client){
+    while (client.connected()){
+       String currentLine = "";
+       while (client.available()){
+      
+        char c = client.read();
+        client.write(c);
+        Serial.write(c);
+        
+        currentLine += c;
+      }
+      test_value(currentLine);
+      delay(100); 
+    }
+    client.stop();
+  }
+}
